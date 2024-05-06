@@ -52,13 +52,17 @@
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="1" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-
+            
             <!-- TreeView -->
-            <TreeView x:Name="fileTreeView" Grid.Row="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
+            <TreeView x:Name="fileTreeView" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
+                      SelectedItemChanged="FileTreeView_OnSelectedItemChanged"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 <TreeView.Resources>
                     <Style TargetType="TreeViewItem">
                         <Setter Property="Foreground" Value="White" />
@@ -66,19 +70,44 @@
                 </TreeView.Resources>
             </TreeView>
 
+            <GridSplitter Grid.Column="1" Width="1" Background="#202226" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                <GridSplitter.Effect>
+                    <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="Black" Opacity="0.7" />
+                </GridSplitter.Effect>
+            </GridSplitter>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="1" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Name="txtHeader" Grid.Row="0" FontSize="24" FontWeight="Bold" Margin="10, 0, 0, 0" Foreground="White" />
+
+                <Rectangle Grid.Row="1" Fill="#202226" Width="Auto">
+                    <Rectangle.Effect>
+                        <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="Black" Opacity="0.7" />
+                    </Rectangle.Effect>
+                </Rectangle>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBlock Name="txtFileContent" FontSize="12" TextWrapping="Wrap" Margin="10, 5, 10, 5" Foreground="White" />
+                </ScrollViewer>
+            </Grid>
         </Grid>
        
 
         <!-- Footer -->
-        <StackPanel Grid.Row="2">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
             <!--Number of items in folder-->
-            <TextBlock x:Name="txtNumberOfItems" Foreground="White" HorizontalAlignment="Left" />
+            <TextBlock Name="txtNumberOfItems" Foreground="White" HorizontalAlignment="Left" Width="Auto" />
 
             <!--Size of files selected-->
-            <TextBlock x:Name="txtSizeOfFiles" Foreground="White" HorizontalAlignment="Left" />
+            <TextBlock Name="txtSizeOfFiles" Foreground="White" HorizontalAlignment="Left" Width="Auto" />
 
             <!--Permissions of files-->
-            <TextBlock x:Name="txtPermissions" Foreground="White" HorizontalAlignment="Left" />
+            <TextBlock Name="txtPermissions" Foreground="White" HorizontalAlignment="Left" Width="Auto" />
         </StackPanel>
     </Grid>
 </Window>
