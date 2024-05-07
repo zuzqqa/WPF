@@ -27,7 +27,7 @@
             </Rectangle.Effect>
         </Rectangle>
 
-        <Rectangle Grid.Row="2" Fill="#131517" />
+        <Rectangle Grid.Row="2"  Fill="#131517" />
 
         <Rectangle Grid.Row="3" Fill="#202226">
             <Rectangle.Effect>
@@ -36,24 +36,17 @@
         </Rectangle>
 
         <!-- Custom core buttons -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="0" Width="128">
-            <Button x:Name="btnMinimize" Width="40" Height="40" Margin="0,2,2,0" FontSize="16" Content="🗕"
-                    BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="BtnMinimize_OnClick" />
-            <Button x:Name="btnMaximize" Width="40" Height="40" Margin="2,2,2,0" FontSize="16" Content="🗖"
-                    BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="BtnMaximize_OnClick" />
-            <Button x:Name="btnClose" Width="40" Height="40" Margin="2,2,0,0" FontSize="16" Content="🗙"
-                    BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="BtnClose_OnClick" />
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Width="128">
+            <Button x:Name="btnMinimize" Width="40" Height="40" FontSize="16" Content="🗕" BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="BtnMinimize_OnClick" Margin="0,2,2,0"/>
+            <Button x:Name="btnMaximize" Width="40" Height="40" FontSize="16" Content="🗖" BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="BtnMaximize_OnClick" Margin="2,2,2,0"/>
+            <Button x:Name="btnClose" Width="40" Height="40" FontSize="16" Content="🗙" BorderBrush="Transparent" Background="Transparent" Foreground="White" Click="BtnClose_OnClick" Margin="2,2,0,0"/>
         </StackPanel>
 
         <!-- Menu -->
-        <Menu HorizontalAlignment="Left" Grid.Row="0" Width="Auto" Background="Transparent">
-            <MenuItem HorizontalContentAlignment="Center" Height="40" Width="100" Header="📁 File" FontSize="16"
-                      FontWeight="Medium" Foreground="White" BorderThickness="0"
-                      Style="{DynamicResource MenuItemStyle1}">
-                <MenuItem Padding="0" Header="Open" FontWeight="Medium" FontSize="12" Background="#202226"
-                          Foreground="White" BorderThickness="0" Click="MenuItem_OnClick" />
-                <MenuItem Padding="0" Header="Exit" FontWeight="Medium" FontSize="12" Background="#202226"
-                          Foreground="White" BorderThickness="0" />
+        <Menu Grid.Row="0" Width="Auto" HorizontalAlignment="Left" Background="Transparent">
+            <MenuItem Style="{DynamicResource MenuItemStyle1}" Header="📁 File" FontSize="16" FontWeight="Medium" HorizontalContentAlignment="Center" Height="40" Width="100" Foreground="White" BorderThickness="0">
+                <MenuItem Header="Open" Click="MenuItem_OnClick" FontWeight="Medium" FontSize="12" Background="#202226" Foreground="White" BorderThickness="0" Padding="0"/>
+                <MenuItem Header="Exit" FontWeight="Medium" FontSize="12" Background="#202226" Foreground="White" BorderThickness="0" Padding="0"/>
             </MenuItem>
         </Menu>
 
@@ -64,12 +57,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-
+            
             <!-- TreeView -->
-            <TreeView ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                      ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                      x:Name="fileTreeView" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
-                      SelectedItemChanged="FileTreeView_OnSelectedItemChanged">
+            <TreeView x:Name="fileTreeView" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"
+                      SelectedItemChanged="FileTreeView_OnSelectedItemChanged"
+                      ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Hidden">
                 <TreeView.Resources>
                     <Style TargetType="TreeViewItem">
                         <Setter Property="Foreground" Value="White" />
@@ -77,8 +70,7 @@
                 </TreeView.Resources>
             </TreeView>
 
-            <GridSplitter HorizontalAlignment="Center" VerticalAlignment="Stretch" Width="1" Grid.Column="1"
-                          Background="#202226">
+            <GridSplitter Grid.Column="1" Width="1" Background="#202226" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                 <GridSplitter.Effect>
                     <DropShadowEffect ShadowDepth="0" BlurRadius="10" Color="Black" Opacity="0.7" />
                 </GridSplitter.Effect>
@@ -91,8 +83,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Margin="10, 0, 0, 0" Name="txtHeader" Grid.Row="0" FontSize="24" FontWeight="Bold"
-                           Foreground="White" />
+                <TextBlock Name="txtHeader" Grid.Row="0" FontSize="24" FontWeight="Bold" Margin="10, 0, 0, 0" Foreground="White" />
 
                 <Rectangle Grid.Row="1" Fill="#202226" Width="Auto">
                     <Rectangle.Effect>
@@ -100,24 +91,23 @@
                     </Rectangle.Effect>
                 </Rectangle>
 
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="1">
-                    <TextBlock Margin="10, 5, 10, 5" Name="txtFileContent" FontSize="12" TextWrapping="Wrap"
-                               Foreground="White" />
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <TextBlock Name="txtFileContent" FontSize="12" TextWrapping="Wrap" Margin="10, 5, 10, 5" Foreground="White" />
                 </ScrollViewer>
             </Grid>
         </Grid>
-
+       
 
         <!-- Footer -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="3">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
             <!--Number of items in folder-->
-            <TextBlock HorizontalAlignment="Left" Width="Auto" Name="txtNumberOfItems" Foreground="White" />
+            <TextBlock Name="txtNumberOfItems" Foreground="White" HorizontalAlignment="Left" Width="Auto" />
 
             <!--Size of files selected-->
-            <TextBlock HorizontalAlignment="Left" Width="Auto" Name="txtSizeOfFiles" Foreground="White" />
+            <TextBlock Name="txtSizeOfFiles" Foreground="White" HorizontalAlignment="Left" Width="Auto" />
 
             <!--Permissions of files-->
-            <TextBlock HorizontalAlignment="Left" Width="Auto" Name="txtPermissions" Foreground="White" />
+            <TextBlock Name="txtPermissions" Foreground="White" HorizontalAlignment="Left" Width="Auto" />
         </StackPanel>
     </Grid>
 </Window>
