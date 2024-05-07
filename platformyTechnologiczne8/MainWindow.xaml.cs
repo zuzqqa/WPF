@@ -1,10 +1,11 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using platformyTechnologiczne8.View;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using WinControls = System.Windows.Controls;
 using WinForms = System.Windows.Forms;
+using SymIO = System.IO;
 
 namespace platformyTechnologiczne8
 {
@@ -97,14 +98,14 @@ namespace platformyTechnologiczne8
                 foreach (var fileInfo in subDirectoryInfo.GetFiles())
                 {
                     var fileNode = CreateTreeViewItem(fileInfo);
-                    subDirectoryNode.Items.Add(fileNode); // Dodaje pliki do podkatalogu
+                    subDirectoryNode.Items.Add(fileNode);
                 }
             }
 
             foreach (var fileInfo in directoryInfo.GetFiles())
             {
                 var fileNode = CreateTreeViewItem(fileInfo);
-                parentNode.Items.Add(fileNode); // Dodaje pliki do podkatalogu
+                parentNode.Items.Add(fileNode); 
             }
         }
 
@@ -129,7 +130,44 @@ namespace platformyTechnologiczne8
 
         private void CreateMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            PopUpWindow popUpWindow = new PopUpWindow();
+
+            if (popUpWindow.ShowDialog() == true)
+            {
+                TreeViewItem selectedItem = (TreeViewItem)fileTreeView.SelectedItem;
+                string fileName = popUpWindow.txtName.Text;
+                string folderPath = selectedItem.Tag.ToString();
+
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    if (!string.IsNullOrEmpty(folderPath))
+                    {
+                        string fullPath = SymIO.Path.Combine(folderPath, fileName);
+
+                        if (popUpWindow.rdFile.IsChecked == true)
+                        {
+                            SymIO.File.Create(fullPath);
+
+                            FileAttributes attributes = FileAttributes.Normal;
+
+                            if (popUpWindow.chbxReadOnly.IsChecked == true)
+                                attributes |= FileAttributes.ReadOnly;
+                            if (popUpWindow.chbxArchive.IsChecked == true)
+                                attributes |= FileAttributes.Archive; 
+                            if(popUpWindow.chbxHidden.IsChecked == true)
+                                attributes |= FileAttributes.Hidden;
+                            if(popUpWindow.chbxSystem.IsChecked == true)
+                                attributes |= FileAttributes.System;
+
+                            SymIO.File.SetAttributes(fullPath, attributes);
+                        }
+                        else if (popUpWindow.rdDir.IsChecked == true)
+                        {
+                            SymIO.Directory.CreateDirectory(fullPath);
+                        }
+                    }
+                }
+            }
         }
 
         private void deleteMenuItem_OnClick(object sender, RoutedEventArgs e)
