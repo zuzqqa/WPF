@@ -31,17 +31,14 @@ namespace platformyTechnologiczne8.View
             this.Close();
         }
 
-        private void TxtName_OnTextChanged(object sender, TextChangedEventArgs e)
+        private bool BtnSave_OnClick(object sender, RoutedEventArgs e)
         {
-        }
-        private void BtnSave_OnClick(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            return true;
         }
 
-        private void BtnCancel_OnClick(object sender, RoutedEventArgs e)
+        private bool BtnCancel_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }
