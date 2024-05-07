@@ -91,7 +91,7 @@
                     </Rectangle.Effect>
                 </Rectangle>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
                     <TextBlock Name="txtFileContent" FontSize="12" TextWrapping="Wrap" Margin="10, 5, 10, 5" Foreground="White" />
                 </ScrollViewer>
             </Grid>

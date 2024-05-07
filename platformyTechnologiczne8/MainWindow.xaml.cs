@@ -1,8 +1,10 @@
 ﻿using platformyTechnologiczne8.View;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MessageBox = System.Windows.MessageBox;
 using WinControls = System.Windows.Controls;
 using WinForms = System.Windows.Forms;
 using SymIO = System.IO;
@@ -11,6 +13,8 @@ namespace platformyTechnologiczne8
 {
     public partial class MainWindow : Window
     {
+        private String selectedDirectory { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -43,9 +47,11 @@ namespace platformyTechnologiczne8
                 .GetParent(Directory.GetParent(Directory.GetParent(Directory.GetCurrentDirectory()).FullName).FullName)
                 .FullName;
 
-            if (dialog.ShowDialog() != WinForms.DialogResult.OK) return;
-
-            PopulateTreeView(dialog.SelectedPath, fileTreeView);
+            if (dialog.ShowDialog() == WinForms.DialogResult.OK)
+            {
+                selectedDirectory = dialog.SelectedPath;
+                PopulateTreeView(selectedDirectory, fileTreeView);
+            }
         }
 
         private void PopulateTreeView(string directory, WinControls.TreeView treeView)
@@ -131,42 +137,55 @@ namespace platformyTechnologiczne8
         private void CreateMenuItem_Click(object sender, RoutedEventArgs e)
         {
             PopUpWindow popUpWindow = new PopUpWindow();
+            popUpWindow.ShowDialog();
 
-            if (popUpWindow.ShowDialog() == true)
+            if (popUpWindow.Success)
             {
                 TreeViewItem selectedItem = (TreeViewItem)fileTreeView.SelectedItem;
-                string fileName = popUpWindow.txtName.Text;
+                string fileName = popUpWindow.FileName;
                 string folderPath = selectedItem.Tag.ToString();
 
-                if (!string.IsNullOrEmpty(fileName))
+                if (!string.IsNullOrEmpty(fileName) && !string.IsNullOrEmpty(folderPath))
                 {
-                    if (!string.IsNullOrEmpty(folderPath))
+                    if (Regex.IsMatch(fileName, @"^[a-zA-Z0-9_~.-]{1,8}\.(txt|php|html)$"))
                     {
-                        string fullPath = SymIO.Path.Combine(folderPath, fileName);
+                        string fullPath = Path.Combine(folderPath, fileName);
 
-                        if (popUpWindow.rdFile.IsChecked == true)
+                        if (popUpWindow.IsFile)
                         {
-                            SymIO.File.Create(fullPath);
+                            using (FileStream fs = File.Create(fullPath))
+                            {
+                                FileAttributes attributes = FileAttributes.Normal;
 
-                            FileAttributes attributes = FileAttributes.Normal;
+                                if (popUpWindow.HasReadOnly)
+                                    attributes |= FileAttributes.ReadOnly;
+                                if (popUpWindow.HasArchive)
+                                    attributes |= FileAttributes.Archive;
+                                if (popUpWindow.HasHidden)
+                                    attributes |= FileAttributes.Hidden;
+                                if (popUpWindow.HasSystem)
+                                    attributes |= FileAttributes.System;
 
-                            if (popUpWindow.chbxReadOnly.IsChecked == true)
-                                attributes |= FileAttributes.ReadOnly;
-                            if (popUpWindow.chbxArchive.IsChecked == true)
-                                attributes |= FileAttributes.Archive; 
-                            if(popUpWindow.chbxHidden.IsChecked == true)
-                                attributes |= FileAttributes.Hidden;
-                            if(popUpWindow.chbxSystem.IsChecked == true)
-                                attributes |= FileAttributes.System;
+                                File.SetAttributes(fullPath, attributes);
+                            }
 
-                            SymIO.File.SetAttributes(fullPath, attributes);
+                            TreeViewItem newFileNode = CreateTreeViewItem(new FileInfo(fullPath));
+                            selectedItem.Items.Add(newFileNode);
                         }
-                        else if (popUpWindow.rdDir.IsChecked == true)
+                        else if (popUpWindow.IsDirectory)
                         {
-                            SymIO.Directory.CreateDirectory(fullPath);
+                            Directory.CreateDirectory(fullPath);
+                            TreeViewItem newDirectoryNode = CreateTreeViewItem(new DirectoryInfo(fullPath));
+                            selectedItem.Items.Add(newDirectoryNode);
                         }
                     }
+                    else
+                    {
+                        MessageBox.Show("Invalid file name! Please enter a valid file name with .txt, .php, or .html extension and up to 8 characters.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
                 }
+               
             }
         }
 
@@ -218,6 +237,8 @@ namespace platformyTechnologiczne8
 
         private void FileTreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
+            if(fileTreeView.SelectedItem == null) return;
+
             var selectedItem = (TreeViewItem)fileTreeView.SelectedItem;
 
             var path = (string)selectedItem.Tag;
